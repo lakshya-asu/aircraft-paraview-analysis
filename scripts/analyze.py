@@ -183,33 +183,83 @@ def analyze(name, cfg):
 
     Hide(normals, view)
 
-    # ── 2. Curvature heat-map ─────────────────────────────────────────────────
+    # ── 2. Mean curvature heat-map (percentile-clipped range) ────────────────
+    def percentile_range(vtk_filter, array_name, lo=2, hi=98):
+        """Return (p_lo, p_hi) clipped scalar range from a VTK filter output."""
+        data = servermanager.Fetch(vtk_filter)
+        arr  = data.GetPointData().GetArray(array_name)
+        if arr is None:
+            return None, None
+        vals = sorted(arr.GetValue(i) for i in range(arr.GetNumberOfTuples()))
+        n    = len(vals)
+        return vals[max(0, int(lo / 100 * n))], vals[min(n - 1, int(hi / 100 * n))]
+
+    pos, fpt, vup = views["perspective"]
+
+    mean_lo, mean_hi = percentile_range(curvature, "Mean_Curvature", lo=2, hi=98)
+    print(f"  Curvature range (p2–p98): [{mean_lo:.4f}, {mean_hi:.4f}]")
+
     cd = Show(curvature, view)
     cd.Representation = "Surface"
     ColorBy(cd, ("POINTS", "Mean_Curvature"))
-    cd.RescaleTransferFunctionToDataRange(True)
 
     lut = GetColorTransferFunction("Mean_Curvature")
     lut.ApplyPreset("Cool to Warm", True)
+    if mean_lo is not None:
+        lut.RescaleTransferFunction(mean_lo, mean_hi)
 
     bar = GetScalarBar(lut, view)
-    bar.Title           = "Mean Curvature"
+    bar.Title           = "Mean Curvature (p2–p98)"
     bar.ComponentTitle  = ""
     bar.Visibility      = 1
     bar.ScalarBarLength = 0.6
 
-    pos, fpt, vup = views["perspective"]
     view.CameraPosition  = pos
     view.CameraFocalPoint = fpt
     view.CameraViewUp    = vup
 
-    path = os.path.join(SHOTS_DIR, f"{prefix}_curvature.png")
+    path = os.path.join(SHOTS_DIR, f"{prefix}_curvature_mean.png")
     SaveScreenshot(path, view, ImageResolution=[1920, 1080])
     shots.append(os.path.relpath(path, REPO_DIR))
-    print("  Shot: curvature")
+    print("  Shot: curvature_mean")
 
     bar.Visibility = 0
     Hide(curvature, view)
+
+    # ── 2b. Gaussian curvature ────────────────────────────────────────────────
+    gauss = Curvature(Input=normals)
+    gauss.CurvatureType = "Gaussian"
+    gauss.UpdatePipeline()
+
+    gauss_lo, gauss_hi = percentile_range(gauss, "Gauss_Curvature", lo=2, hi=98)
+    print(f"  Gaussian range (p2–p98): [{gauss_lo:.4f}, {gauss_hi:.4f}]")
+
+    gd = Show(gauss, view)
+    gd.Representation = "Surface"
+    ColorBy(gd, ("POINTS", "Gauss_Curvature"))
+
+    glut = GetColorTransferFunction("Gauss_Curvature")
+    glut.ApplyPreset("Rainbow Desaturated", True)
+    if gauss_lo is not None:
+        glut.RescaleTransferFunction(gauss_lo, gauss_hi)
+
+    gbar = GetScalarBar(glut, view)
+    gbar.Title           = "Gaussian Curvature (p2–p98)"
+    gbar.ComponentTitle  = ""
+    gbar.Visibility      = 1
+    gbar.ScalarBarLength = 0.6
+
+    view.CameraPosition  = pos
+    view.CameraFocalPoint = fpt
+    view.CameraViewUp    = vup
+
+    path = os.path.join(SHOTS_DIR, f"{prefix}_curvature_gaussian.png")
+    SaveScreenshot(path, view, ImageResolution=[1920, 1080])
+    shots.append(os.path.relpath(path, REPO_DIR))
+    print("  Shot: curvature_gaussian")
+
+    gbar.Visibility = 0
+    Hide(gauss, view)
 
     # ── 3. Wireframe ─────────────────────────────────────────────────────────
     wd = Show(reader, view)
@@ -238,6 +288,10 @@ def analyze(name, cfg):
             "tri_to_vert_ratio": round(n_cells / n_points, 3) if n_points else None,
         },
         "geometry": geo,
+        "curvature_ranges_p2_p98": {
+            "mean":     [round(mean_lo, 6), round(mean_hi, 6)],
+            "gaussian": [round(gauss_lo, 6), round(gauss_hi, 6)],
+        },
         "bounding_box": {
             "x":        {"min": round(bounds[0], 4), "max": round(bounds[1], 4), "length": round(lx, 4)},
             "y":        {"min": round(bounds[2], 4), "max": round(bounds[3], 4), "length": round(ly, 4)},

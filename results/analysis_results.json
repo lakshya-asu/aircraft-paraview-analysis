@@ -12,6 +12,16 @@
       "surface_area": 76235.703,
       "volume": 295310.3943
     },
+    "curvature_ranges_p2_p98": {
+      "mean": [
+        -0.007395,
+        1.861194
+      ],
+      "gaussian": [
+        -0.014185,
+        16.115635
+      ]
+    },
     "bounding_box": {
       "x": {
         "min": 2.0577,
@@ -43,7 +53,8 @@
       "results/screenshots/atr_x_top.png",
       "results/screenshots/atr_x_bottom.png",
       "results/screenshots/atr_x_perspective.png",
-      "results/screenshots/atr_x_curvature.png",
+      "results/screenshots/atr_x_curvature_mean.png",
+      "results/screenshots/atr_x_curvature_gaussian.png",
       "results/screenshots/atr_x_wireframe.png"
     ]
   },
@@ -59,6 +70,16 @@
     "geometry": {
       "surface_area": 209992.4593,
       "volume": 638026.2399
+    },
+    "curvature_ranges_p2_p98": {
+      "mean": [
+        -0.131583,
+        1.442122
+      ],
+      "gaussian": [
+        -0.002202,
+        66.880046
+      ]
     },
     "bounding_box": {
       "x": {
@@ -91,7 +112,8 @@
       "results/screenshots/fighter_jet_top.png",
       "results/screenshots/fighter_jet_bottom.png",
       "results/screenshots/fighter_jet_perspective.png",
-      "results/screenshots/fighter_jet_curvature.png",
+      "results/screenshots/fighter_jet_curvature_mean.png",
+      "results/screenshots/fighter_jet_curvature_gaussian.png",
       "results/screenshots/fighter_jet_wireframe.png"
     ]
   }

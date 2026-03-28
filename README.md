@@ -1,7 +1,11 @@
 # Aircraft ParaView Analysis
 
 Geometric and visual analysis of two aircraft STL models using [ParaView 6](https://www.paraview.org/).
-Each model is analyzed for mesh statistics, bounding-box geometry, surface area, estimated volume, and rendered from 9 viewpoints (7 orthographic + curvature heat-map + wireframe).
+Each model produces **20 renders**: 7 orthographic views, perspective, mean curvature, Gaussian curvature, and wireframe — all at 1920×1080.
+
+> **Curvature note:** color ranges are clipped to the **2nd–98th percentile** to suppress edge outliers
+> and reveal actual surface variation. Raw ranges contain extreme spikes (e.g., ATR_x mean curvature
+> spans −2.9 to +52.9; the p2–p98 window is −0.007 to +1.86).
 
 ---
 
@@ -27,15 +31,17 @@ Each model is analyzed for mesh statistics, bounding-box geometry, surface area,
 | **Length Y (wingspan)** | 340.00 | 260.00 |
 | **Height Z** | 84.74 | 59.89 |
 | **Bounding diagonal** | 484.88 | 584.45 |
+| **Mean curvature p2–p98** | −0.007 → 1.861 | −0.132 → 1.442 |
+| **Gaussian curvature p2–p98** | −0.014 → 16.12 | −0.002 → 66.88 |
 
-> Units are in the STL file's native coordinate system (millimeters for these models).
-> Volume is estimated from the closed surface via `vtkMassProperties` — valid only for watertight meshes.
+> Units are in the STL's native coordinate system (millimeters for these models).
+> Volume is estimated from the closed surface via `vtkMassProperties`.
 
 ---
 
 ## ATR_x — ATR Turboprop Regional Aircraft Concept
 
-### Perspective View
+### Perspective
 ![ATR_x Perspective](results/screenshots/atr_x_perspective.png)
 
 ### Front
@@ -56,10 +62,17 @@ Each model is analyzed for mesh statistics, bounding-box geometry, surface area,
 ### Bottom
 ![ATR_x Bottom](results/screenshots/atr_x_bottom.png)
 
-### Mean Curvature Heat-Map
-![ATR_x Curvature](results/screenshots/atr_x_curvature.png)
+### Mean Curvature (p2–p98 clipped, Cool-to-Warm)
+![ATR_x Mean Curvature](results/screenshots/atr_x_curvature_mean.png)
 
-> Cool-to-Warm color map: **blue** = concave regions, **red** = convex regions.
+> **Blue** = concave (valleys, inlets), **Red** = convex (leading edges, nose, engine nacelles).
+> Range clipped to p2–p98 (−0.007, 1.861) to suppress sharp-edge outliers.
+
+### Gaussian Curvature (p2–p98 clipped, Rainbow Desaturated)
+![ATR_x Gaussian Curvature](results/screenshots/atr_x_curvature_gaussian.png)
+
+> Gaussian curvature = product of principal curvatures. Zero on flat/developable surfaces,
+> positive on dome-like regions (nose), negative on saddle regions.
 
 ### Wireframe
 ![ATR_x Wireframe](results/screenshots/atr_x_wireframe.png)
@@ -68,7 +81,7 @@ Each model is analyzed for mesh statistics, bounding-box geometry, surface area,
 
 ## Fighter Jet Concept
 
-### Perspective View
+### Perspective
 ![Fighter Jet Perspective](results/screenshots/fighter_jet_perspective.png)
 
 ### Front
@@ -89,10 +102,13 @@ Each model is analyzed for mesh statistics, bounding-box geometry, surface area,
 ### Bottom
 ![Fighter Jet Bottom](results/screenshots/fighter_jet_bottom.png)
 
-### Mean Curvature Heat-Map
-![Fighter Jet Curvature](results/screenshots/fighter_jet_curvature.png)
+### Mean Curvature (p2–p98 clipped, Cool-to-Warm)
+![Fighter Jet Mean Curvature](results/screenshots/fighter_jet_curvature_mean.png)
 
-> Cool-to-Warm color map: **blue** = concave regions, **red** = convex regions.
+> Range clipped to p2–p98 (−0.132, 1.442).
+
+### Gaussian Curvature (p2–p98 clipped, Rainbow Desaturated)
+![Fighter Jet Gaussian Curvature](results/screenshots/fighter_jet_curvature_gaussian.png)
 
 ### Wireframe
 ![Fighter Jet Wireframe](results/screenshots/fighter_jet_wireframe.png)
@@ -110,7 +126,7 @@ aircraft-paraview-analysis/
 │   └── analyze.py          # ParaView 6 analysis script
 ├── results/
 │   ├── analysis_results.json
-│   └── screenshots/        # 18 PNG renders (1920×1080)
+│   └── screenshots/        # 20 PNG renders per run (1920×1080)
 └── README.md
 ```
 
@@ -122,7 +138,8 @@ Requirements: ParaView 6 with Python bindings (`pvpython`).
 pvpython --force-offscreen-rendering scripts/analyze.py
 ```
 
-Full JSON results are in [`results/analysis_results.json`](results/analysis_results.json).
+Full numeric results (bounding box, surface area, volume, curvature percentile ranges) are in
+[`results/analysis_results.json`](results/analysis_results.json).
 
 ---
 

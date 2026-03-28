@@ -1,0 +1,98 @@
+{
+  "ATR_x": {
+    "name": "ATR_x",
+    "description": "ATR turboprop regional aircraft concept",
+    "file": "ATR_x.stl",
+    "mesh": {
+      "triangles": 143270,
+      "vertices": 71651,
+      "tri_to_vert_ratio": 2.0
+    },
+    "geometry": {
+      "surface_area": 76235.703,
+      "volume": 295310.3943
+    },
+    "bounding_box": {
+      "x": {
+        "min": 2.0577,
+        "max": 337.2086,
+        "length": 335.151
+      },
+      "y": {
+        "min": -170.0,
+        "max": 170.0,
+        "length": 340.0
+      },
+      "z": {
+        "min": 11.935,
+        "max": 96.6717,
+        "length": 84.7367
+      },
+      "center": [
+        169.6332,
+        0.0,
+        54.3034
+      ],
+      "diagonal": 484.8778
+    },
+    "screenshots": [
+      "results/screenshots/atr_x_front.png",
+      "results/screenshots/atr_x_rear.png",
+      "results/screenshots/atr_x_left.png",
+      "results/screenshots/atr_x_right.png",
+      "results/screenshots/atr_x_top.png",
+      "results/screenshots/atr_x_bottom.png",
+      "results/screenshots/atr_x_perspective.png",
+      "results/screenshots/atr_x_curvature.png",
+      "results/screenshots/atr_x_wireframe.png"
+    ]
+  },
+  "Fighter_Jet": {
+    "name": "Fighter_Jet",
+    "description": "Fighter jet concept",
+    "file": "Fighter_jet_concept.stl",
+    "mesh": {
+      "triangles": 172676,
+      "vertices": 86062,
+      "tri_to_vert_ratio": 2.006
+    },
+    "geometry": {
+      "surface_area": 209992.4593,
+      "volume": 638026.2399
+    },
+    "bounding_box": {
+      "x": {
+        "min": 0.0,
+        "max": 520.0,
+        "length": 520.0
+      },
+      "y": {
+        "min": -130.0,
+        "max": 130.0,
+        "length": 260.0
+      },
+      "z": {
+        "min": -11.9295,
+        "max": 47.9575,
+        "length": 59.887
+      },
+      "center": [
+        260.0,
+        0.0,
+        18.014
+      ],
+      "diagonal": 584.454
+    },
+    "screenshots": [
+      "results/screenshots/fighter_jet_front.png",
+      "results/screenshots/fighter_jet_rear.png",
+      "results/screenshots/fighter_jet_left.png",
+      "results/screenshots/fighter_jet_right.png",
+      "results/screenshots/fighter_jet_top.png",
+      "results/screenshots/fighter_jet_bottom.png",
+      "results/screenshots/fighter_jet_perspective.png",
+      "results/screenshots/fighter_jet_curvature.png",
+      "results/screenshots/fighter_jet_wireframe.png"
+    ]
+  }
+}

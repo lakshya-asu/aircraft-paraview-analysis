@@ -2,6 +2,7 @@
 
 Geometric and visual analysis of two aircraft STL models using [ParaView 6](https://www.paraview.org/).
 Each model produces **20 renders**: 7 orthographic views, perspective, mean curvature, Gaussian curvature, and wireframe — all at 1920×1080.
+Metric comparison charts are generated with matplotlib.
 
 > **Curvature note:** color ranges are clipped to the **2nd–98th percentile** to suppress edge outliers
 > and reveal actual surface variation. Raw ranges contain extreme spikes (e.g., ATR_x mean curvature
@@ -36,6 +37,25 @@ Each model produces **20 renders**: 7 orthographic views, perspective, mean curv
 
 > Units are in the STL's native coordinate system (millimeters for these models).
 > Volume is estimated from the closed surface via `vtkMassProperties`.
+
+---
+
+## Metric Comparisons
+
+### Full Overview (all 8 metrics)
+![Overview](results/charts/comparison_overview.png)
+
+### Radar Chart (normalised across models)
+![Radar](results/charts/comparison_radar.png)
+
+### Mesh Statistics
+![Mesh](results/charts/comparison_mesh.png)
+
+### Geometry
+![Geometry](results/charts/comparison_geometry.png)
+
+### Bounding Box Dimensions
+![Bounding Box](results/charts/comparison_bbox.png)
 
 ---
 
@@ -123,19 +143,25 @@ aircraft-paraview-analysis/
 │   ├── ATR_x.stl
 │   └── Fighter_jet_concept.stl
 ├── scripts/
-│   └── analyze.py          # ParaView 6 analysis script
+│   ├── analyze.py          # ParaView 6 render + geometry analysis
+│   └── compare.py          # Matplotlib comparison charts
 ├── results/
 │   ├── analysis_results.json
+│   ├── charts/             # 5 comparison charts
 │   └── screenshots/        # 20 PNG renders per run (1920×1080)
 └── README.md
 ```
 
 ## Reproducing the Analysis
 
-Requirements: ParaView 6 with Python bindings (`pvpython`).
+Requirements: ParaView 6 with Python bindings (`pvpython`) and matplotlib.
 
 ```bash
+# Renders + geometry analysis
 pvpython --force-offscreen-rendering scripts/analyze.py
+
+# Comparison charts (uses results/analysis_results.json)
+python scripts/compare.py
 ```
 
 Full numeric results (bounding box, surface area, volume, curvature percentile ranges) are in
@@ -143,4 +169,4 @@ Full numeric results (bounding box, surface area, volume, curvature percentile r
 
 ---
 
-*Generated with [ParaView](https://www.paraview.org/) 6.0.1 and [Claude Code](https://claude.ai/claude-code).*
+*Done with [ParaView](https://www.paraview.org/) 6.0.1.*
